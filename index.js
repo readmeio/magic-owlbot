@@ -85,7 +85,7 @@ module.exports = {
           return;
         }
 
-        if(message.subtype == 'file_share') {
+        if(channelName == self.opts.channel && message.subtype == 'file_share') {
           // This is an image upload! (We use timeouts so they hopefully show up in order)
           self.handleSlackQuery(clean(message.file.title), channel);
           setTimeout(function() {
