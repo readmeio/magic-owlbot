@@ -70,6 +70,13 @@ You may want to use your own personal phone number for the "magic" option in con
 
 When you have it all set up, just say "Hello" in the channel, and you'll get a welcome message from Magic.
 
+Other Notes
+-----------
+
+This can both send and recieve images, so no need to worry about that!
+
+It currently limits messages to 160 characters; I'm honestly not sure what would happen on Magic's side without the limit. If it turns out they can indeed get longer messages, I'll remove it.
+
 Deploying to Heroku
 -------------------
 
