@@ -141,6 +141,12 @@ module.exports = {
 
   // If we have a valid slack message to pass along
   handleSlackQuery: function(query, channel) {
+
+    // Don't send slack-specific emoji
+    query = query.replace(/:simple_smile:/, ':)');
+    query = query.replace(/:smile:/, ':D');
+    query = query.replace(/:smiley:/, ':)');
+
     console.log('[SENT]', query);
     this.twilio.messages.create({
       body: query,
