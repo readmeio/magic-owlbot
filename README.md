@@ -30,3 +30,10 @@ You may want to use your own personal phone number for the "magic" option in con
 
 When you have it all set up, just say "Hello" in the channel, and you'll get a welcome message from Magic.
 
+Deploying to Heroku
+-------------------
+
+Unfortunately, you'll need to deploy it publicly so Twilio can contact it.
+
+You should be able to deploy to Heroku easily. You'll need to remove `config.js` from `.gitignore`, and check it in for things to work.
+
