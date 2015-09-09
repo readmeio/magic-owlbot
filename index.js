@@ -76,9 +76,13 @@ module.exports = {
 
         var userString = '<@' + self.slack.self.id + '>';
 
+        // Is it from the bot?
+        if(message.user == self.slack.self.id) {
+          return;
+        }
+
         // We only want to send something if it's in the right channel.
         // (`message.subtype` indicates it's something like "John joined the channel", etc)
-
         if(channelName != self.opts.channel || message.subtype) {
           var isDirectMessage = channelName.indexOf('#') != 0;
           var isRecipientOfMessage = text.indexOf('<@'+self.slack.self.id+'>') == 0;
@@ -94,7 +98,7 @@ module.exports = {
           return;
         }
 
-        self.handleSlackQuery(text.replace(new RegExp("^" + userString + ":?\\s"), ''), channel);
+        //self.handleSlackQuery(text.replace(new RegExp("^" + userString + ":?\\s"), ''), channel);
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
         textError = text == null ? 'text was undefined.' : null;
@@ -121,8 +125,18 @@ module.exports = {
     app.post('/', function (req, res) {
       if (self.opts.bypassTwilioValidate || Twilio.validateExpressRequest(req, self.opts.twilio.authToken)) {
         if(req.body.Body) {
-          console.log('[RECEIVED]', req.body.Body);
-          self.channel.send(req.body.Body);
+          var body = req.body.Body;
+
+          if(req.body.MediaUrl0) {
+            body += " " + req.body.MediaUrl0;
+          }
+
+          if(req.body.MediaUrl1) {
+            body += " " + req.body.MediaUrl1;
+          }
+
+          console.log('[RECEIVED]', body);
+          self.channel.send(body);
         }
         res.send("");
       } else {
