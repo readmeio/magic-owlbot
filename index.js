@@ -181,6 +181,9 @@ module.exports = {
     query = query.replace(/:simple_smile:/, ':)');
     query = query.replace(/:smile:/, ':D');
     query = query.replace(/:smiley:/, ':)');
+    query = query.replace(/:wink:/, ';)');
+    query = query.replace(/:stuck_out_tongue:/, ':P');
+    query = query.replace(/:kiss:/, ':*');
 
     console.log('[SENT]', query);
     this.twilio.messages.create({
