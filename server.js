@@ -1,25 +1,34 @@
-var opts = require('./config')
+var express = require('express')
+  , Slack = require('slack-client')
+  , Twilio = require('twilio')
 
+// Load the settings from config.js
+try {
+  var opts = require('./config')
+} catch(e) {
+  console.log("[ERROR] You need to copy config.example.js to config.js");
+  process.exit();
+}
+
+// If the channel doesn't start with a #, add it.
 if(opts.channel.indexOf('#') != 0) {
   opts.channel = "#" + opts.channel;
 }
 
+// These are our "global" variables
 var info = {
   'channel': undefined,
 };
 
-var Slack = require('slack-client')
-
-var express = require('express')
-
-var twilio = require('twilio');
-var twilioClient = twilio(opts.twilio.accountSid, opts.twilio.authToken);
- 
+// Set up Slack
 var slack = new Slack(opts.slack.token, true, true);
 
+// Set up Twilio
+var twilio = Twilio(opts.twilio.accountSid, opts.twilio.authToken);
+
+// Listen for slack connection
 slack.on('open', function() {
-  var channel, group, groups, id, messages;
-  var unreads = slack.getUnreadCount();
+  var channel, id, messages;
   var channels = (function() {
     var ref, results;
     ref = slack.channels;
@@ -42,29 +51,13 @@ slack.on('open', function() {
     return;
   }
 
-  var groups = (function() {
-    var ref, results;
-    ref = slack.groups;
-    results = [];
-    for (id in ref) {
-      group = ref[id];
-      if (group.is_open && !group.is_archived) {
-        results.push(group.name);
-      }
-    }
-    return results;
-  })();
-
   console.log("Welcome to Slack. You are @" + slack.self.name + " of " + slack.team.name);
-  console.log('You are in: ' + channels.join(', '));
-  console.log('As well as: ' + groups.join(', '));
-  messages = unreads === 1 ? 'message' : 'messages';
-  return console.log("You have " + unreads + " unread " + messages);
+  console.log('  - You are in: ' + channels.join(', '));
 });
 
+// Slack listen for messages
 slack.on('message', function(message) {
   var channel, channelError, channelName, errors, response, text, textError, ts, type, typeError, user, userName;
-  console.log(message.channel);
   channel = slack.getChannelGroupOrDMByID(message.channel);
   user = slack.getUserByID(message.user);
   response = '';
@@ -72,6 +65,7 @@ slack.on('message', function(message) {
   channelName = (channel != null ? channel.is_channel : void 0) ? '#' : '';
   channelName = channelName + (channel ? channel.name : 'UNKNOWN_CHANNEL');
   userName = (user != null ? user.name : void 0) != null ? "@" + user.name : "UNKNOWN_USER";
+
   if ((type === 'message') && (text != null) && (channel != null)) {
 
     var userString = '<@' + slack.self.id + '>';
@@ -80,15 +74,7 @@ slack.on('message', function(message) {
       return;
     }
 
-    handleQuery(text.replace(new RegExp("^" + userString + ":?\\s"), ''), channel);
-
-    //var isDirectMessage = channelName.indexOf('#') !== 0;
-
-    //console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
-    //if(text.indexOf(userString) === 0 || isDirectMessage) {
-    //}
-    //return console.log("@" + slack.self.name + " responded with \"" + response + "\"");
-    return;
+    handleSlackQuery(text.replace(new RegExp("^" + userString + ":?\\s"), ''), channel);
   } else {
     typeError = type !== 'message' ? "unexpected type " + type + "." : null;
     textError = text == null ? 'text was undefined.' : null;
@@ -100,8 +86,14 @@ slack.on('message', function(message) {
   }
 });
 
-function handleQuery(query, channel) {
-  twilioClient.messages.create({
+// Slack error
+slack.on('error', function(error) {
+  return console.error("Error: " + error);
+});
+
+// If we have a valid slack message to pass along
+function handleSlackQuery(query, channel) {
+  twilio.messages.create({
     body: query,
     to: opts.magic,
     from: opts.twilio.phoneNumber,
@@ -111,19 +103,15 @@ function handleQuery(query, channel) {
   });
 }
 
-slack.on('error', function(error) {
-  return console.error("Error: " + error);
-});
-
-slack.login();
-
+// Set up our express server
 var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
-app.post('/sms', function (req, res) {
-  if (opts.bypassTwilioValidate || twilio.validateExpressRequest(req, opts.twilio.authToken)) {
+// Wait for a post from Twilio
+app.post('/', function (req, res) {
+  if (opts.bypassTwilioValidate || Twilio.validateExpressRequest(req, opts.twilio.authToken)) {
     if(req.body.Body) {
       info.channel.send(req.body.Body);
     }
@@ -135,10 +123,13 @@ app.post('/sms', function (req, res) {
   }
 });
 
-var server = app.listen(3012, function () {
+// Run the express server
+var server = app.listen(opts.port, function () {
   var host = server.address().address;
   var port = server.address().port;
 
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('Slack bot is listening at http://%s:%s', host, port);
 });
 
+// Start the Slack connection
+slack.login();
