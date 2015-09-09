@@ -69,8 +69,17 @@ slack.on('message', function(message) {
   if ((type === 'message') && (text != null) && (channel != null)) {
 
     var userString = '<@' + slack.self.id + '>';
-    if(channelName != opts.channel) {
-      channel.send("Sorry, I can only respond in <#" + info.channel.id + ">!" );
+
+    // We only want to send something if it's in the right channel.
+    // (`message.subtype` indicates it's something like "John joined the channel", etc)
+
+    if(channelName != opts.channel || message.subtype) {
+      var isDirectMessage = channelName.indexOf('#') != 0;
+      var isRecipientOfMessage = text.indexOf('<@'+slack.self.id+'>') == 0;
+
+      if(isDirectMessage || isRecipientOfMessage) {
+        channel.send("Sorry, I can only respond in <#" + info.channel.id + ">!" );
+      }
       return;
     }
 
