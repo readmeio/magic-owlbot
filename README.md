@@ -8,6 +8,8 @@ At [ReadMe.io](http://readme.io), our mascot Owlbert now takes care of all our n
 Installation
 ------------
 
+**EASY SETUP**: Use [readmeio/owlbot-example](https://github.com/readmeio/owlbot-example)
+
 Set up a new folder + git repo:
 
     mkdir mybot && cd mybot
