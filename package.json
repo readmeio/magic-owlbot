@@ -1,0 +1,27 @@
+{
+  "name": "owlbot",
+  "version": "1.0.0",
+  "description": "A Slack bot that connects to Magic",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/.bin/nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readmeio/owlbot"
+  },
+  "author": "Readme.io",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/readmeio/owlbot/issues"
+  },
+  "homepage": "https://github.com/readmeio/owlbot",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "node-slack": "0.0.7",
+    "nodemon": "^1.4.1",
+    "slack-client": "^1.4.1"
+  }
+}
