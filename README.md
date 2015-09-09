@@ -8,16 +8,54 @@ At [ReadMe.io](http://readme.io), our mascot Owlbert now takes care of all our n
 Installation
 ------------
 
-Clone it and install it:
+Set up a new folder + git repo:
 
-    git clone git@github.com:readmeio/owlbot.git
-    npm install
+    mkdir mybot && cd mybot
+    npm init
+    npm install owlbot --save
 
-Copy config.example.js to config.js
+Create an index.js file, and edit it:
 
-    cp config.example.js config.js
+    var owlbot = require('owlbot');
+    owlbot.configure({
+      
+      // The channel you want your bot to respond to requests in
+      // (Your bot will pass everything said in the channel to Magic)
+      channel: "#test-bot-channel",
 
-Follow the instructions in config.js
+      // SLACK
+      //
+      // On your Integrations page in the Slack settings, do the following:
+      // 1. Click the "Bots" integration (Not "Slackbot"; that's different)
+      // 2. Fill out its username, and paste the API Token below
+      slack: {
+        token: "xoxb-###############-###########",
+      },
+
+      // TWILIO
+      //
+      // 1. Buy a number here: https://www.twilio.com/user/account/phone-numbers/search
+      // 2. Copy the phone number and paste it below (format is "+1##########")
+      // 3. Set your SMS & MMS "Request URL" to the server this will be hosted on
+      // 4. Get your accountSid and authToken from here: https://www.twilio.com/user/account/settings
+      twilio: {
+        phoneNumber: "+1##########",
+        accountSid: "ABCDEFG",
+        authToken: "1234567",
+      },
+
+      // By default, we check if the Twilio request is real (and not someone messing with you)
+      // If things aren't working for some reason, though, turn this to true.
+      bypassTwilioValidate: false,
+
+      // The phone number for Magic (format: "+1##########")
+      magic: "+14082171721",
+
+      // The port you want to run this on (the process.env.PORT stuff makes it work on Heroku)
+      port: process.env.PORT || 3012,
+    });
+
+    owlbot.start();
 
 That's it! Once you have your bot configured, you can just say stuff in the channel and it will be forwarded to Magic.
 
