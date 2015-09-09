@@ -102,6 +102,7 @@ slack.on('error', function(error) {
 
 // If we have a valid slack message to pass along
 function handleSlackQuery(query, channel) {
+  console.log('[SENT]', query);
   twilio.messages.create({
     body: query,
     to: opts.magic,
@@ -122,6 +123,7 @@ app.use(bodyParser.json());
 app.post('/', function (req, res) {
   if (opts.bypassTwilioValidate || Twilio.validateExpressRequest(req, opts.twilio.authToken)) {
     if(req.body.Body) {
+      console.log('[RECEIVED]', req.body.Body);
       info.channel.send(req.body.Body);
     }
     res.send("");
