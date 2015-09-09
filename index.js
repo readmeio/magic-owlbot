@@ -7,6 +7,11 @@ module.exports = {
   // The user-specified options (set via this.configure)
   opts: {},
 
+  // These are our "global" variables
+  channel: undefined,
+  slack: undefined,
+  twilio: undefined,
+
   // Set options
   configure: function(opts) {
     this.opts = opts;
@@ -18,26 +23,21 @@ module.exports = {
 
     // If the channel doesn't start with a #, add it.
     if(this.opts.channel.indexOf('#') != 0) {
-      opts.channel = "#" + opts.channel;
+      this.opts.channel = "#" + this.opts.channel;
     }
 
-    // These are our "global" variables
-    var info = {
-      'channel': undefined,
-    };
-
     // Set up Slack
-    var slack = new Slack(opts.slack.token, true, true);
+    this.slack = new Slack(this.opts.slack.token, true, true);
 
     // Set up Twilio
-    var twilio = Twilio(opts.twilio.accountSid, opts.twilio.authToken);
+    this.twilio = Twilio(this.opts.twilio.accountSid, this.opts.twilio.authToken);
 
     // Listen for slack connection
-    slack.on('open', function() {
+    this.slack.on('open', function() {
       var channel, id, messages;
       var channels = (function() {
         var ref, results;
-        ref = slack.channels;
+        ref = self.slack.channels;
         results = [];
         for (id in ref) {
           channel = ref[id];
@@ -45,27 +45,27 @@ module.exports = {
             results.push("#" + channel.name);
           }
 
-          if(channel.name == opts.channel.replace(/#/, '')) {
-            info.channel = channel;
+          if(channel.name == self.opts.channel.replace(/#/, '')) {
+            self.channel = channel;
           }
         }
         return results;
       })();
 
-      if(!info.channel) {
-        console.log("ERROR: Your bot isn't in the specified channel (" + opts.channel + ")!");
+      if(!self.channel) {
+        console.log("ERROR: Your bot isn't in the specified channel (" + self.opts.channel + ")!");
         return;
       }
 
-      console.log("Welcome to Slack. You are @" + slack.self.name + " of " + slack.team.name);
+      console.log("Welcome to Slack. You are @" + self.slack.self.name + " of " + self.slack.team.name);
       console.log('  - You are in: ' + channels.join(', '));
     });
 
     // Slack listen for messages
-    slack.on('message', function(message) {
+    self.slack.on('message', function(message) {
       var channel, channelError, channelName, errors, response, text, textError, ts, type, typeError, user, userName;
-      channel = slack.getChannelGroupOrDMByID(message.channel);
-      user = slack.getUserByID(message.user);
+      channel = self.slack.getChannelGroupOrDMByID(message.channel);
+      user = self.slack.getUserByID(message.user);
       response = '';
       type = message.type, ts = message.ts, text = message.text;
       channelName = (channel != null ? channel.is_channel : void 0) ? '#' : '';
@@ -74,17 +74,17 @@ module.exports = {
 
       if ((type === 'message') && (text != null) && (channel != null)) {
 
-        var userString = '<@' + slack.self.id + '>';
+        var userString = '<@' + self.slack.self.id + '>';
 
         // We only want to send something if it's in the right channel.
         // (`message.subtype` indicates it's something like "John joined the channel", etc)
 
-        if(channelName != opts.channel || message.subtype) {
+        if(channelName != self.opts.channel || message.subtype) {
           var isDirectMessage = channelName.indexOf('#') != 0;
-          var isRecipientOfMessage = text.indexOf('<@'+slack.self.id+'>') == 0;
+          var isRecipientOfMessage = text.indexOf('<@'+self.slack.self.id+'>') == 0;
 
           if(isDirectMessage || isRecipientOfMessage) {
-            channel.send("Sorry, I can only respond in <#" + info.channel.id + ">!" );
+            channel.send("Sorry, I can only respond in <#" + self.channel.id + ">!" );
           }
           return;
         }
@@ -97,12 +97,12 @@ module.exports = {
         errors = [typeError, textError, channelError].filter(function(element) {
           return element !== null;
         }).join(' ');
-        return console.log("@" + slack.self.name + " could not respond. " + errors);
+        return console.log("@" + self.slack.self.name + " could not respond. " + errors);
       }
     });
 
     // Slack error
-    slack.on('error', function(error) {
+    self.slack.on('error', function(error) {
       return console.error("Error: " + error);
     });
 
@@ -114,10 +114,10 @@ module.exports = {
 
     // Wait for a post from Twilio
     app.post('/', function (req, res) {
-      if (opts.bypassTwilioValidate || Twilio.validateExpressRequest(req, opts.twilio.authToken)) {
+      if (self.opts.bypassTwilioValidate || Twilio.validateExpressRequest(req, self.opts.twilio.authToken)) {
         if(req.body.Body) {
           console.log('[RECEIVED]', req.body.Body);
-          info.channel.send(req.body.Body);
+          self.channel.send(req.body.Body);
         }
         res.send("");
       } else {
@@ -128,7 +128,7 @@ module.exports = {
     });
 
     // Run the express server
-    var server = app.listen(opts.port, function () {
+    var server = app.listen(self.opts.port, function () {
       var host = server.address().address;
       var port = server.address().port;
 
@@ -136,19 +136,18 @@ module.exports = {
     });
 
     // Start the Slack connection
-    slack.login();
+    self.slack.login();
   },
 
   // If we have a valid slack message to pass along
   handleSlackQuery: function(query, channel) {
     console.log('[SENT]', query);
-    twilio.messages.create({
+    this.twilio.messages.create({
       body: query,
-      to: opts.magic,
-      from: opts.twilio.phoneNumber,
+      to: this.opts.magic,
+      from: this.opts.twilio.phoneNumber,
     }, function(err, message) {
-      console.log(err);
-      process.stdout.write(message.sid);
+      if(err) console.log(err);
     });
   },
 
