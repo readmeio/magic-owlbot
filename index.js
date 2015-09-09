@@ -89,6 +89,11 @@ module.exports = {
           return;
         }
 
+        if(text.length > 160) {
+          channel.send("Hey chatterbox, keep it under 160 characters!");
+          return;
+        }
+
         self.handleSlackQuery(text.replace(new RegExp("^" + userString + ":?\\s"), ''), channel);
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
