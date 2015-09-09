@@ -1,6 +1,6 @@
 {
   "name": "owlbot",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Slack bot that connects to Magic",
   "main": "index.js",
   "scripts": {
