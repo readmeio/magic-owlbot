@@ -72,6 +72,10 @@ module.exports = {
       channelName = channelName + (channel ? channel.name : 'UNKNOWN_CHANNEL');
       userName = (user != null ? user.name : void 0) != null ? "@" + user.name : "UNKNOWN_USER";
 
+      function clean(text) {
+        return text.replace(new RegExp("^" + userString + ":?\\s"), '');
+      }
+
       if ((type === 'message') && (text != null) && (channel != null)) {
 
         var userString = '<@' + self.slack.self.id + '>';
@@ -81,9 +85,21 @@ module.exports = {
           return;
         }
 
-        // We only want to send something if it's in the right channel.
-        // (`message.subtype` indicates it's something like "John joined the channel", etc)
-        if(channelName != self.opts.channel || message.subtype) {
+        if(message.subtype == 'file_share') {
+          // This is an image upload! (We use timeouts so they hopefully show up in order)
+          self.handleSlackQuery(clean(message.file.title), channel);
+          setTimeout(function() {
+            self.handleSlackQuery(message.file.url, channel);
+          }, 2000)
+          if(message.file.initial_comment && message.file.initial_comment.comment) {
+            setTimeout(function() {
+              self.handleSlackQuery(clean(message.file.initial_comment.comment), channel);
+            }, 4000)
+          }
+          return;
+        } else if(channelName != self.opts.channel || message.subtype) {
+          // We only want to send something if it's in the right channel.
+          // (`message.subtype` indicates it's something like "John joined the channel", etc)
           var isDirectMessage = channelName.indexOf('#') != 0;
           var isRecipientOfMessage = text.indexOf('<@'+self.slack.self.id+'>') == 0;
 
@@ -98,7 +114,7 @@ module.exports = {
           return;
         }
 
-        //self.handleSlackQuery(text.replace(new RegExp("^" + userString + ":?\\s"), ''), channel);
+        self.handleSlackQuery(clean(text), channel);
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
         textError = text == null ? 'text was undefined.' : null;
