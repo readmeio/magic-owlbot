@@ -132,6 +132,10 @@ module.exports = {
       }
     });
 
+    app.use(function(req, res, next){
+      res.status(404);
+    });
+
     // Run the express server
     var server = app.listen(self.opts.port, function () {
       var host = server.address().address;
