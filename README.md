@@ -16,10 +16,18 @@ At [ReadMe.io](http://readme.io), our mascot Owlbert now takes care of all our n
 
 *Note: You'll probably want to switch to the Hobby plan so it doesn't sleep*
 
-## Make sure you:
+## Troubleshooting
 
-  * Set your Messaging "Request URL" in Twilio to http://[yoursubdomain].herokuapp.com
-  * Create the channel you used for `OWLBOT_CHANNEL`, and `/invite NAME_OF_YOUR_BOT` to it.
+To see errors, run `heroku logs --app [yoursubdomain]`.
+
+Some common issues:
+
+  * Make sure you set your Messaging "Request URL" in Twilio to http://[yoursubdomain].herokuapp.com
+  * Make sure you have created the channel you used for `OWLBOT_CHANNEL`, and `/invite NAME_OF_YOUR_BOT` to it.
+    * You may have to restart (`heroku restart --app [yoursubdomain]`) after you do this
+  * You cannot use the same name for your #channel and your @bot. They must be different.
+
+You can update your configs by going into **Settings** and clicking **Reveal Config Vars**.
 
 ## Message Magic
 
