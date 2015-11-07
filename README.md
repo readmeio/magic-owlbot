@@ -26,6 +26,7 @@ Some common issues:
   * Make sure you have created the channel you used for `OWLBOT_CHANNEL`, and `/invite NAME_OF_YOUR_BOT` to it.
     * You may have to restart (`heroku restart --app [yoursubdomain]`) after you do this
   * You cannot use the same name for your #channel and your @bot. They must be different.
+  * Twilio doesn't support shortcodes for texting. So, you'll need to use Magic's full number (`+14082171721`).
 
 You can update your configs by going into **Settings** and clicking **Reveal Config Vars**.
 
