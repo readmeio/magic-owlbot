@@ -1,0 +1,7 @@
+{
+  "name": "Owlbot",
+  "description": "A Slack bot that connects to Magic",
+  "repository": "https://github.com/readmeio/owlbot",
+  "logo": "http://cl.ly/image/2V0d0v000E3r/c.png",
+  "keywords": ["readme", "readmeio", "magic", "owlbot", "slack"]
+}
