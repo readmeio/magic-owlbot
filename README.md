@@ -24,24 +24,25 @@ Owlbot can only work in one channel. Set the channel:
 
 Next, we have to get Owlbot into your Slack channel. On your Integrations page in the Slack settings, do the following:
 
-    1. Click the "Bots" integration (Not "Slackbot"; that's different)
-    2. Fill out its username, and use the API Token ("xoxb-###############-###########") below:
+1. Click the "Bots" integration (Not "Slackbot"; that's different)
+2. Fill out its username, and use the API Token ("xoxb-###############-###########") below:
 
-    heroku config:set OWLBOT_SLACK="xoxb-###############-###########"
+When you're ready, set up the variable:
+
+    heroku config:set OWLBOT_SLACK=xoxb-###############-###########
 
 ### Twilio Setup
 
-    1. Buy a number here: https://www.twilio.com/user/account/phone-numbers/search
-    2. Copy the phone number and paste it below (format is "+1##########")
-    3. Set your SMS & MMS "Request URL" to the server this will be hosted on
-    4. Get your accountSid and authToken from here: https://www.twilio.com/user/account/settings
+1. Buy a number here: https://www.twilio.com/user/account/phone-numbers/search
+2. Copy the phone number and paste it below (format is "+1##########")
+3. Set your SMS & MMS "Request URL" to the server this will be hosted on
+4. Get your accountSid and authToken from here: https://www.twilio.com/user/account/settings
 
 Set up the following:
 
-    heroku config:set OWLBOT_TWILIO_NUMBER="+1##########"
-    heroku config:set OWLBOT_TWILIO_ACCOUNTSID="ABCDEFG"
-    heroku config:set OWLBOT_TWILIO_AUTHTOKEN="1234567"
-
+    heroku config:set OWLBOT_TWILIO_NUMBER=+1##########
+    heroku config:set OWLBOT_TWILIO_ACCOUNTSID=ABCDEFG
+    heroku config:set OWLBOT_TWILIO_AUTHTOKEN=1234567
 
 By default, we check if the Twilio request is real (and not someone messing with you). If things aren't working for some reason, though, turn this to true.
 
@@ -51,7 +52,7 @@ By default, we check if the Twilio request is real (and not someone messing with
 
 The last setp is seting up the number for Magic. **NOTE:** We recommend you use your own phone number first to test everything out. Switch it to Magic's number when you're confident it's working!
 
-    heroku config:set OWLBOT_MAGIC="+1##########"
+    heroku config:set OWLBOT_MAGIC=+1##########
 
 When you're ready, the Magic number is `"+14082171721"`.
 
