@@ -8,7 +8,7 @@ At [ReadMe.io](http://readme.io), our mascot Owlbert now takes care of all our n
 
   * **Time to install** 2 minutes
   * **Difficulty** Easy! No tech or programming needed.
-  * **Cost** Twilio is $1/mo + $0.0075/text. Heroku is free or $7/mo. Slack is free. Magic is free but they charge for certain requests; they'll warn you first. We pay under $10/mo, total.
+  * **Cost** Twilio is $1/mo + $0.0075/text. Heroku is free or $7/mo. Slack is free. Magic is free but they charge for certain requests; they'll warn you first. We pay under $3/mo.
 
 ## Deploy to Heroku
 
