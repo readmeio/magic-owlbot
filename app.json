@@ -3,5 +3,31 @@
   "description": "A Slack bot that connects to Magic",
   "repository": "https://github.com/readmeio/owlbot",
   "logo": "http://cl.ly/image/2V0d0v000E3r/c.png",
-  "keywords": ["readme", "readmeio", "magic", "owlbot", "slack"]
+  "keywords": ["readme", "readmeio", "magic", "owlbot", "slack"],
+  "env": {
+    "OWLBOT_SLACK": {
+      "description": "On your Slack Integrations page, click the 'Bots' integration (not 'Slackbot'!). Fill out the form and get an API token.",
+      "value": "xoxb-###############-###########"
+    },
+    "OWLBOT_CHANNEL": {
+      "description": "Which channel should Owlbot live in? It MUST be different than what you named your bot above.",
+      "value": "#owlbot"
+    },
+    "OWLBOT_TWILIO_NUMBER": {
+      "description": "Buy a number here: https://www.twilio.com/user/account/phone-numbers/search. IMPORTANT: Set your messaging 'Request URL' to http://[yoursubdomain].herokuapp.com.",
+      "value": "+1##########"
+    },
+    "OWLBOT_TWILIO_ACCOUNTSID": {
+      "description": "Get the Account SID from here: https://www.twilio.com/user/account/settings",
+      "value": "ABCDEF"
+    },
+    "OWLBOT_TWILIO_AUTHTOKEN": {
+      "description": "Get the Auth Token from here: https://www.twilio.com/user/account/settings",
+      "value": "12345"
+    },
+    "OWLBOT_MAGIC": {
+      "description": "The phone number for Magic. (It might be wise to start with your own number to test and change it back later)",
+      "value": "+14082171721"
+    }
+  }
 }

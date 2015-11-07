@@ -12,7 +12,7 @@ At [ReadMe.io](http://readme.io), our mascot Owlbert now takes care of all our n
 
 ## Deploy to Heroku
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?env[OWLBOT_CHANNEL]=#owlbot&env[OWLBOT_SLACK]=xoxb-###############-###########&env[OWLBOT_TWILIO_NUMBER]=+1########&env[OWLBOT_TWILIO_ACCOUNTSID=ABCDEFG&env[OWLBOT_TWILIO_AUTHTOKEN]=1234567&env[OWLBOT_MAGIC]=+1#########)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 *Note: You'll probably want to switch to the Hobby plan so it doesn't sleep*
 
