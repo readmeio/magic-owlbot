@@ -12,6 +12,8 @@ At [ReadMe.io](http://readme.io), our mascot Owlbert now takes care of all our n
 
 ## Deploy to Heroku
 
+It's easy to set up! Just click the button below, and follow the instructions!
+
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 *Note: You'll probably want to switch to the Hobby plan so it doesn't sleep*
