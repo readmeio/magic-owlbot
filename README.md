@@ -35,7 +35,7 @@ When you're ready, set up the variable:
 
 1. Buy a number here: https://www.twilio.com/user/account/phone-numbers/search
 2. Copy the phone number and paste it below (format is "+1##########")
-3. Set your SMS & MMS "Request URL" to the server this will be hosted on
+3. Set your SMS & MMS "Request URL" to the server this will be hosted on. Likely http://yoursubdomain.herokuapp.com
 4. Get your accountSid and authToken from here: https://www.twilio.com/user/account/settings
 
 Set up the following:
