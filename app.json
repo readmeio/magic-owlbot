@@ -10,7 +10,7 @@
       "value": "xoxb-###############-###########"
     },
     "OWLBOT_CHANNEL": {
-      "description": "Which channel should Owlbot live in? It MUST be different than what you named your bot above.",
+      "description": "Which channel should Owlbot live in? It MUST be different than what you named your bot above. Make sure you create this channel and invite your bot to it.",
       "value": "#owlbot"
     },
     "OWLBOT_TWILIO_NUMBER": {
